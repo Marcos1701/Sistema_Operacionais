@@ -1,105 +1,117 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // Round-robin algorithm
+const prompt_sync_1 = __importDefault(require("prompt-sync"));
+const input = (0, prompt_sync_1.default)();
 class Processo {
-    constructor(nome, ingresso, tempo) {
+    constructor(nome, ingresso, tempoTotaldeExecucao) {
         this.nome = nome;
         this.ingresso = ingresso;
-        this.tempo = tempo;
+        this.tempoTotaldeExecucao = tempoTotaldeExecucao;
+        this.tempoTotalEspera = 0;
+        this.graficoParcial = `${this.nome}} | `;
     }
 }
 class RoundRobin {
     constructor(quantum) {
         this.processos = [];
+        this.grafico = '';
         this.quantum = quantum;
         this.tempoTotal = 0;
         this.tempoTotalEspera = 0;
         this.tempoMedioEspera = 0;
         this.tempoMedioExecucao = 0;
     }
-    addProcesso(nome, ingresso, tempo) {
-        this.processos.push(new Processo(nome, ingresso, tempo));
+    addProcesso(nome, ingresso, tempoTotaldeExecucao) {
+        this.processos.push(new Processo(nome, ingresso, tempoTotaldeExecucao));
     }
     executar() {
-        let tempoTotal = 0;
-        let tempoTotalEspera = 0;
-        let processos = this.processos.slice(); // Cria uma cópia dos processos para não modificar a lista original
-        const quantum = this.quantum;
+        let processos = this.processos;
+        let quantum = this.quantum;
+        let tempoTotal = this.tempoTotal;
+        let tempoTotalEspera = this.tempoTotalEspera;
         while (processos.length > 0) {
-            for (let i = 0; i < processos.length; i++) {
-                const processo = processos[i];
-                if (processo.ingresso <= tempoTotal) {
-                    if (processo.tempo <= quantum) {
-                        tempoTotal += processo.tempo;
-                        tempoTotalEspera += tempoTotal - processo.ingresso - processo.tempo;
-                        processos.splice(i, 1);
-                        i--;
-                    }
-                    else {
-                        tempoTotal += quantum;
-                        processo.tempo -= quantum;
-                    }
+            let processo = processos.shift();
+            if (processo.ingresso < tempoTotal) {
+                processos.push(processo);
+                continue;
+            }
+            if (processo.tempoTotaldeExecucao > quantum) {
+                processo.tempoTotaldeExecucao -= quantum;
+                tempoTotal += quantum;
+                tempoTotalEspera += quantum * (processos.length - 1);
+                processo.graficoParcial += `${'='.repeat(quantum)}| `;
+                for (let processo of processos) {
+                    processo.graficoParcial += `${'~'.repeat(quantum)}| `;
                 }
-                else {
-                    tempoTotal++;
-                    i--;
+                processos.push(processo);
+            }
+            else {
+                tempoTotal += processo.tempoTotaldeExecucao;
+                tempoTotalEspera += (processos.length - 1) * processo.tempoTotaldeExecucao;
+                processo.tempoTotaldeExecucao = 0;
+                processo.graficoParcial += `${'='.repeat(processo.tempoTotaldeExecucao)}`;
+                for (let processo of processos) {
+                    processo.graficoParcial += `${'~'.repeat(processo.tempoTotaldeExecucao)}| `;
                 }
             }
         }
-        const quantidadeProcessos = this.processos.length;
         this.tempoTotal = tempoTotal;
         this.tempoTotalEspera = tempoTotalEspera;
-        this.tempoMedioEspera = tempoTotalEspera / quantidadeProcessos;
-        this.tempoMedioExecucao = tempoTotal / quantidadeProcessos;
+        this.tempoMedioEspera = tempoTotalEspera / this.processos.length;
+        this.tempoMedioExecucao = tempoTotal / this.processos.length;
     }
     retorno() {
-        const retorno = [];
-        retorno.push(`Tempo total de espera: ${this.tempoTotalEspera.toFixed(2)}`);
-        retorno.push(`Tempo médio de espera: ${this.tempoMedioEspera.toFixed(2)}`);
-        retorno.push(`Tempo médio de execução: ${this.tempoMedioExecucao.toFixed(2)}`);
+        let retorno = [];
+        retorno.push('------- Valores resultantes -------');
+        retorno.push(`Tempo total de execução: ${this.tempoTotal}s`);
+        retorno.push(`Tempo total de espera: ${this.tempoTotalEspera}s`);
+        retorno.push(`Tempo médio de espera: ${this.tempoMedioEspera}s`);
+        retorno.push(`Tempo médio de execução: ${this.tempoMedioExecucao}s`);
         return retorno;
     }
+    graficoGeral() {
+        let grafico = '------- Grafico Resultante -------\n';
+        for (let processo of this.processos) {
+            grafico += processo.graficoParcial + '\n';
+        }
+        grafico += '-'.repeat(this.tempoTotal) + '\n';
+        return grafico;
+    }
 }
-const quantumInput = document.getElementById("quantum");
-const btnIniciar = document.getElementById("iniciar");
-let rr;
-if (quantumInput && btnIniciar) {
-    btnIniciar.addEventListener("click", () => {
-        var _a, _b;
-        rr = new RoundRobin(parseInt(quantumInput.value));
-        (_a = document.getElementById("Quantum")) === null || _a === void 0 ? void 0 : _a.setAttribute("hidden", "true");
-        (_b = document.getElementById("inputs")) === null || _b === void 0 ? void 0 : _b.removeAttribute("hidden");
-    });
-    const btnAdd = document.getElementById("adicionar");
-    const btnExecutar = document.getElementById("executar");
-    const nomeInput = document.getElementById("nome");
-    const ingressoInput = document.getElementById("ingresso");
-    const tempoInput = document.getElementById("tempo");
-    const tabela = document.getElementById("tabela");
-    const tabelaMedias = document.getElementById("tabela-medias");
-    const divProcessos = document.getElementById("resultado-processos");
-    const divMedias = document.getElementById("resultado-medias");
-    if (btnAdd) {
-        btnAdd.addEventListener("click", () => {
-            if (nomeInput && ingressoInput && tempoInput) {
-                rr.addProcesso(nomeInput.value, parseInt(ingressoInput.value), parseInt(tempoInput.value));
-                if (tabela) {
-                    tabela.innerHTML += `<tr><td>${nomeInput.value}</td><td>${ingressoInput.value}</td><td>${tempoInput.value}</td></tr>`;
-                }
-                if (divProcessos === null || divProcessos === void 0 ? void 0 : divProcessos.hasAttribute("hidden")) {
-                    divProcessos === null || divProcessos === void 0 ? void 0 : divProcessos.removeAttribute("hidden");
-                }
-            }
-        });
-        if (btnExecutar) {
-            btnExecutar.addEventListener("click", () => {
-                rr.executar();
-                if (tabelaMedias) {
-                    tabelaMedias.innerHTML += `<tr><td colspan="3">${rr.retorno()}</td></tr>`;
-                }
-                if (divMedias === null || divMedias === void 0 ? void 0 : divMedias.hasAttribute("hidden")) {
-                    divMedias === null || divMedias === void 0 ? void 0 : divMedias.removeAttribute("hidden");
-                }
-            });
+function main() {
+    console.log('Round-robin\n');
+    let quantum = parseInt(input('Quantum: '));
+    while (isNaN(quantum) || quantum <= 0) {
+        console.log('Quantum inválido!!\n');
+        quantum = parseInt(input('Quantum: '));
+    }
+    const roundRobin = new RoundRobin(quantum);
+    let opcao = 1;
+    while (opcao != 0) {
+        console.log('\n1 - Adicionar processo\n2 - Executar\n0 - Sair\n\n');
+        opcao = parseInt(input('=> '));
+        switch (opcao) {
+            case 1:
+                const nome = input('Nome do processo: ');
+                const ingresso = parseInt(input('Tempo de ingresso (em segundos): '));
+                const tempo = parseFloat(input('Tempo de execução(em segundos): '));
+                roundRobin.addProcesso(nome, ingresso, tempo);
+                break;
+            case 2:
+                roundRobin.executar();
+                console.log(roundRobin.graficoGeral());
+                console.log('\n');
+                console.log(roundRobin.retorno().join('\n'));
+                break;
+            case 0:
+                break;
+            default:
+                console.log('Opção inválida');
         }
     }
 }
+main();
