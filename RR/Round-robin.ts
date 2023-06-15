@@ -1,142 +1,3 @@
-// // Round-robin algorithm
-// import prompt from 'prompt-sync';
-// const input = prompt();
-
-// class Processo {
-//     nome: string;
-//     ingresso: number;
-//     tempoTotaldeExecucao: number;
-//     tempoTotalEspera: number;
-//     graficoParcial: string;
-
-//     constructor(nome: string, ingresso: number, tempoTotaldeExecucao: number) {
-//         this.nome = nome;
-//         this.ingresso = ingresso;
-//         this.tempoTotaldeExecucao = tempoTotaldeExecucao;
-//         this.tempoTotalEspera = 0;
-//         this.graficoParcial = `${this.nome}} | `;
-//     }
-// }
-
-// class RoundRobin {
-//     processos: Processo[] = [];
-//     quantum: number;
-//     tempoTotal: number;
-//     tempoTotalEspera: number;
-//     tempoMedioEspera: number;
-//     tempoMedioExecucao: number;
-//     grafico: string = '';
-
-//     constructor(quantum: number) {
-//         this.quantum = quantum;
-//         this.tempoTotal = 0;
-//         this.tempoTotalEspera = 0;
-//         this.tempoMedioEspera = 0;
-//         this.tempoMedioExecucao = 0;
-//     }
-
-//     addProcesso(nome: string, ingresso: number, tempoTotaldeExecucao: number) {
-//         this.processos.push(new Processo(nome, ingresso, tempoTotaldeExecucao));
-//     }
-
-//     executar() {
-//         let processos: Processo[] = this.processos;
-//         let quantum = this.quantum;
-//         let tempoTotal = this.tempoTotal;
-//         let tempoTotalEspera = this.tempoTotalEspera;
-
-//         while (processos.length > 0) {
-//             let processo = processos.shift() as Processo;
-            
-//             if(processo.ingresso < tempoTotal){
-//                 processos.push(processo);
-//                 continue;
-//             }
-//             if (processo.tempoTotaldeExecucao > quantum) {
-//                 processo.tempoTotaldeExecucao -= quantum;
-//                 tempoTotal += quantum;
-//                 tempoTotalEspera += quantum * (processos.length - 1);
-//                 processo.graficoParcial += `${'='.repeat(quantum)}| `;
-//                 for (let processo of processos){ 
-//                     processo.graficoParcial += `${'~'.repeat(quantum)}| `;
-//                 }
-//                 processos.push(processo);
-//             } else {
-//                 tempoTotal += processo.tempoTotaldeExecucao;
-//                 tempoTotalEspera += (processos.length - 1) * processo.tempoTotaldeExecucao;
-//                 processo.tempoTotaldeExecucao = 0;
-//                 processo.graficoParcial += `${'='.repeat(processo.tempoTotaldeExecucao)}`;
-//                 for (let processo of processos){
-//                     processo.graficoParcial += `${'~'.repeat(processo.tempoTotaldeExecucao)}| `;
-//                 }
-//             }
-//         }
-
-//         this.tempoTotal = tempoTotal;
-//         this.tempoTotalEspera = tempoTotalEspera;
-//         this.tempoMedioEspera = tempoTotalEspera / this.processos.length;
-//         this.tempoMedioExecucao = tempoTotal / this.processos.length;
-//     }
-
-//     retorno() {
-//         let retorno = [];
-//         retorno.push('------- Valores resultantes -------');
-//         retorno.push(`Tempo total de execução: ${this.tempoTotal}s`);
-//         retorno.push(`Tempo total de espera: ${this.tempoTotalEspera}s`);
-//         retorno.push(`Tempo médio de espera: ${this.tempoMedioEspera}s`);
-//         retorno.push(`Tempo médio de execução: ${this.tempoMedioExecucao}s`);
-//         return retorno;
-//     }
-
-//     graficoGeral() {
-//         let grafico = '------- Grafico Resultante -------\n';
-//         for (let processo of this.processos) {
-//             grafico += processo.graficoParcial + '\n';
-//         }
-//         grafico += '-'.repeat(this.tempoTotal) + '\n';
-//         return grafico;
-//     }
-// }
-
-// function main(){
-//     console.log('Round-robin\n');
-
-//     let quantum = parseInt(input('Quantum: '));
-//     while (isNaN(quantum) || quantum <= 0) {
-//         console.log('Quantum inválido!!\n');
-//         quantum = parseInt(input('Quantum: '));
-//     }
-
-//     const roundRobin = new RoundRobin(quantum);
-//     let opcao = 1;
-
-//     while (opcao != 0) {
-//         console.log('\n1 - Adicionar processo\n2 - Executar\n0 - Sair\n\n');
-//         opcao = parseInt(input('=> '));
-
-//         switch (opcao) {
-//             case 1:
-//                 const nome = input('Nome do processo: ');
-//                 const ingresso = parseInt(input('Tempo de ingresso (em segundos): '));
-//                 const tempo = parseFloat(input('Tempo de execução(em segundos): '));
-//                 roundRobin.addProcesso(nome, ingresso, tempo);
-//                 break;
-//             case 2:
-//                 roundRobin.executar();
-//                 console.log(roundRobin.graficoGeral());
-//                 console.log('\n');
-//                 console.log(roundRobin.retorno().join('\n'));
-//                 break;
-//             case 0:
-//                 break;
-//             default:
-//                 console.log('Opção inválida');
-//         }
-//     }
-// }
-
-// main()
-
 import prompt from 'prompt-sync';
 const input = prompt();
 
@@ -159,65 +20,96 @@ class Processo {
 class RoundRobin {
     processos: Processo[] = [];
     quantum: number;
+    trocaContexto: number;
     tempoTotal: number;
     tempoTotalEspera: number;
     tempoMedioEspera: number;
     tempoMedioExecucao: number;
     grafico: string = '';
 
-    constructor(quantum: number) {
+    constructor(quantum: number, trocaContexto: number = 0) {
         this.quantum = quantum;
         this.tempoTotal = 0;
         this.tempoTotalEspera = 0;
         this.tempoMedioEspera = 0;
         this.tempoMedioExecucao = 0;
+        this.trocaContexto = trocaContexto;
     }
 
-    addProcesso( ingresso: number, tempoTotaldeExecucao: number) {
+    addProcesso(ingresso: number, tempoTotaldeExecucao: number) {
         const nome = `p${this.processos.length + 1}`
         this.processos.push(new Processo(nome, ingresso, tempoTotaldeExecucao));
     }
 
     executar() {
-        let processos: Processo[] = this.processos.slice();
-        let quantum = this.quantum;
-        let tempoTotal = this.tempoTotal;
-        let tempoTotalEspera = this.tempoTotalEspera;
+        let fila: Processo[] = [];
+        let processos: Processo[] = this.processos.slice().sort((a, b) => a.ingresso - b.ingresso);
+        let trocaContexto: number = this.trocaContexto;
+        let processoAtual = processos.shift()
+        let tempo: number = 0;
 
-        while (processos.length > 0) {
-            let processo = processos.shift() as Processo;
+        for (let t = 0, TT = 0, q = this.quantum; processos.length > 0 || fila.length > 0 || processoAtual != undefined; t++) {
 
-            if (processo.ingresso > tempoTotal) {
-                processos.push(processo);
-                tempoTotal++;
+            if (processoAtual && processoAtual.ingresso > tempo) {
+                tempo++;
+                continue;
+            }
+            if (TT > 0) {
+                for (let processo of fila) {
+                    if (processo) {
+                        processo.tempoTotalEspera += 1;
+                        if (TT === 0 || TT === trocaContexto) {
+                            processo.graficoParcial += '|';
+                            if (TT == 0) {
+                                processo.graficoParcial += ' tt ';
+                            }
+                        }
+                    }
+                }
                 continue;
             }
 
-            if (processo.tempoTotaldeExecucao > quantum) {
-                processo.tempoTotaldeExecucao -= quantum;
-                tempoTotal += quantum;
-                tempoTotalEspera += quantum * (processos.length);
-                processo.graficoParcial += `${'-'.repeat(quantum)}`;
-                this.grafico += `${'-'.repeat(quantum)} ${tempoTotal}`
-                for (let p of processos) {
-                    p.graficoParcial += `${'~'.repeat(quantum)}`;
-                }
-                processos.push(processo);
-            } else {
-                tempoTotal += processo.tempoTotaldeExecucao;
-                tempoTotalEspera += (processos.length) * processo.tempoTotaldeExecucao;
-                processo.tempoTotaldeExecucao = 0;
-                processo.graficoParcial += `${'-'.repeat(processo.tempoTotaldeExecucao)} (FINALIZADO)`;
-                for (let p of processos) {
-                    p.graficoParcial += `${'~'.repeat(processo.tempoTotaldeExecucao)}`;
+            while (processos.length > 0 && processos[0].ingresso <= tempo) {
+                const processo = processos.shift();
+                if (processo instanceof Processo) {
+                    fila.push(processo);
+                } else {
+                    throw new Error('Erro ao adicionar processo na fila');
                 }
             }
+
+            if (processoAtual) {
+                if (processoAtual.tempoTotaldeExecucao > 0 && q > 0) {
+                    processoAtual.tempoTotaldeExecucao--;
+                    processoAtual.graficoParcial += '~';
+                    q--;
+                    if (q === 0) {
+                        fila.push(processoAtual);
+                        processoAtual = undefined;
+                        q = this.quantum;
+                        TT = trocaContexto;
+                    }
+                } else {
+                    processoAtual.graficoParcial += '|';
+                    processoAtual = undefined;
+                    q = this.quantum;
+                    TT = trocaContexto;
+                }
+            }
+
+            if (processoAtual == undefined && fila.length > 0) {
+                processoAtual = fila.shift();
+            }
+            tempo++;
         }
 
-        this.tempoTotal = tempoTotal;
-        this.tempoTotalEspera = tempoTotalEspera;
-        this.tempoMedioEspera = tempoTotalEspera / this.processos.length;
-        this.tempoMedioExecucao = tempoTotal / this.processos.length;
+        this.tempoTotal = tempo;
+        this.tempoTotalEspera = this.processos.reduce((total, processo) => total + processo.tempoTotalEspera, 0);
+        this.tempoMedioEspera = this.tempoTotalEspera / this.processos.length;
+        this.tempoMedioExecucao = this.tempoTotal / this.processos.length;
+
+        return this.graficoGeral();
+
     }
 
     retorno() {
@@ -230,7 +122,7 @@ class RoundRobin {
         return retorno;
     }
 
-    graficoGeral() {
+    private graficoGeral() {
         let grafico = '------- Gráfico Resultante -------\n\n';
         for (let processo of this.processos) {
             grafico += processo.graficoParcial + '\n';
@@ -251,8 +143,12 @@ function main() {
         console.log('Quantum inválido!!\n');
         quantum = parseInt(input('Quantum: '));
     }
-
-    const roundRobin = new RoundRobin(quantum);
+    let tempo_troca_contexto = parseInt(input('Tempo de troca de contexto: '));
+    while (isNaN(tempo_troca_contexto) || tempo_troca_contexto < 0) {
+        console.log('Tempo de troca de contexto inválido!!\n');
+        tempo_troca_contexto = parseInt(input('Tempo de troca de contexto: '));
+    }
+    const roundRobin = new RoundRobin(quantum, tempo_troca_contexto);
     let opcao = 1;
 
     while (opcao !== 0) {
@@ -266,8 +162,7 @@ function main() {
                 roundRobin.addProcesso(ingresso, tempo);
                 break;
             case 2:
-                roundRobin.executar();
-                console.log(roundRobin.graficoGeral());
+                console.log(roundRobin.executar());
                 console.log('\n');
                 console.log(roundRobin.retorno().join('\n'));
                 break;
