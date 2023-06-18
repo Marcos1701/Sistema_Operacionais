@@ -10,7 +10,7 @@ class Processo {
         this.nome = nome;
         this.ingresso = ingresso;
         this.duracao = tempoTotaldeExecucao;
-        this.tempoTotalEspera = 1;
+        this.tempoTotalEspera = 0;
         this.tempodeVida = 0;
         this.graficoParcial = `${this.nome} | `;
     }
@@ -87,7 +87,7 @@ class RoundRobin {
                         processoAtual.tempodeVida += this.trocaContexto;
                         for (let processo of fila) {
                             processo.tempodeVida += this.trocaContexto;
-                            processo.tempoTotalEspera += this.trocaContexto;
+                            processo.tempoTotalEspera += this.trocaContexto + 1;
                             if (processo.ingresso === tempo) {
                                 processo.graficoParcial += ' ';
                                 continue;
