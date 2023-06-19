@@ -102,9 +102,9 @@ function main() {
     const bb = new BB(processos, recursos_disponiveis);
 
     if (bb.executa()) {
-        console.log("não ocorreu deadlock, logo o sistema está em estado seguro")
+        console.log("O sistema está em estado seguro")
     } else {
-        console.log("Ocorreu deadlock");
+        console.log("O sistema não está em estado seguro (Ocorreu deadlock..)");
     }
 
     // exemplo em que o sistema não está em estado seguro	
@@ -124,9 +124,9 @@ function main() {
     const bb2 = new BB(processos2, recursos_disponiveis2);
 
     if (bb2.executa()) {
-        console.log("não ocorreu deadlock, logo o sistema está em estado seguro")
+        console.log("O sistema está em estado seguro")
     } else {
-        console.log("Ocorreu deadlock");
+        console.log("O sistema não está em estado seguro (Ocorreu deadlock..)");
     }
 
 }
