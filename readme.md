@@ -157,3 +157,23 @@ Desvantagens: A escolha aleatória pode levar a uma taxa de acertos menor do que
 
 
 Cada algoritmo tem suas próprias vantagens e desvantagens, e a escolha do algoritmo de substituição de páginas depende das características e requisitos do sistema em questão. Além desses algoritmos, existem muitos outros desenvolvidos ao longo dos anos, cada um com suas peculiaridades e otimizações para diferentes cenários.
+
+------------------------------------ Calculo -----------------------------------------------
+
+Resumo simplificado:
+
+O sistema operacional usa uma tabela de páginas para fazer a correspondência entre páginas virtuais e físicas.
+Quando um programa faz referência a um endereço virtual, o sistema operacional divide esse endereço em número da página e deslocamento.
+Ele busca na tabela de páginas o número da página virtual correspondente, obtendo o número da página física.
+O sistema operacional concatena o número da página física com o deslocamento para obter o endereço físico correspondente.
+Exemplo simplificado:
+
+Suponha que um programa esteja executando com páginas virtuais de tamanho 4 KB.
+O programa faz referência ao endereço virtual 0x1234, onde os primeiros 12 bits representam o número da página e os últimos 12 bits representam o deslocamento dentro da página.
+A tabela de páginas tem a entrada: Página virtual 0x1 mapeada para a Página física 0x7.
+O número da página virtual é 0x1, portanto, corresponde à página física 0x7.
+O deslocamento dentro da página é 0x234.
+O endereço físico correspondente é 0x7234 (concatenação do número da página física 0x7 com o deslocamento 0x234).
+Nesse exemplo simplificado, o cálculo do endereço físico é feito através do mapeamento da página virtual para a página física usando a tabela de páginas. O número da página física é concatenado com o deslocamento para obter o endereço físico completo.
+
+Lembre-se de que esse exemplo é uma simplificação e não considera todos os detalhes do cálculo real, mas espero que ele ilustre de forma clara como o cálculo é realizado.
