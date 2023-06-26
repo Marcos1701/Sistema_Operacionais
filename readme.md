@@ -1,4 +1,7 @@
------------------------------ Gerencia de Memória --------------------------------------------------
+- ## Impasse
+   - Grupo de tarefas bloqueadas aguardando umas pelas outras.
+
+# --------------------- Gerencia de Memória ----------------------------
 
 - Resumo
     - Espaço de Endereçamento:
