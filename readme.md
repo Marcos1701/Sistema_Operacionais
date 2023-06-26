@@ -121,6 +121,36 @@
 
 
 
+## ---------- Gerenciamento de memória Virtual ----------
+
+- ## Divisão de memória:
+   - Memória é dividida em páginas.
+   - Espaço de endereçamento virtual é dividido em páginas virtuais.
+
+- ## Mapeamento:
+   - Mapeamento entre páginas virtuais e físicas.
+   - Tabela de páginas mantém o mapeamento.
+
+- ## Paginação:
+   - Páginas são carregadas sob demanda.
+   - Ocorre falha de página se página não está presente na memória física.
+   - Páginas são buscadas e carregadas do armazenamento secundário.
+
+- ## Substituição de páginas:
+   - Se memória física estiver cheia, páginas são substituídas.
+   - Algoritmos de substituição, como LRU, são utilizados.
+
+- ## Proteção de memória:
+   - Páginas possuem permissões de acesso.
+   - Protege processos uns contra os outros.
+  
+- ## O gerenciamento de memória virtual permite:
+   - Execução eficiente de programas com memória física limitada.
+   - Abstração de memória contígua para os processos.
+   - Aproveitamento máximo da memória disponível.
+   - Proteção e controle de acesso entre os processos.
+
+--  -------------  ------
 
 FIFO, LRU e NRU são algoritmos de substituição de páginas usados em sistemas de gerenciamento de memória virtual para decidir qual página deve ser removida da memória quando há uma falta de página (page fault).
 
