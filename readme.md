@@ -1,9 +1,15 @@
 - ## Impasse
-   - Grupo de tarefas bloqueadas aguardando umas pelas outras.
-   - Resumo
+   - ### Grupo de tarefas bloqueadas aguardando umas pelas outras.
+   - ### Resumo
       - Um impasse (ou deadlock) ocorre quando dois ou mais processos em um sistema computacional ficam presos aguardando um recurso que está sendo usado por outro processo, resultando em uma situação em que nenhum dos processos pode avançar. Isso cria um impasse, pois cada processo está esperando pelo recurso que está sendo retido por outro processo.
       - Os impasses podem ocorrer devido a uma série de fatores, como alocação inadequada de recursos, sincronização inadequada entre processos, falta de prioridades claras ou dependências circulares entre os processos. Essa situação de impasse pode ser prejudicial para o desempenho e a eficiência do sistema, pois os recursos ficam inativos, impedindo o progresso dos processos e desperdiçando recursos disponíveis.
       - Para resolver impasses, são necessárias técnicas específicas, como o uso de algoritmos de prevenção, detecção e recuperação de deadlock. Essas técnicas visam evitar a ocorrência de impasses, detectar sua presença quando ocorrem e recuperar o sistema para que os processos possam continuar sua execução normalmente.
+   - ### Condições para ocorrer um impasse
+      - Exclusão Mútua: Recursos só podem ser usados por um processo de cada vez.
+      - Espera Circular: Processos estão aguardando uns aos outros em um ciclo para obter recursos.
+      - Não Preempção: Recursos não podem ser tomados à força de um processo.
+      - Espera Circular: Deve existir um ciclo de dependências circulares entre os processos.
+      - Se todas essas condições estiverem presentes simultaneamente, pode ocorrer um impasse. Para evitar impasses, é necessário eliminar ou evitar uma ou mais dessas condições.
 
 # --------------------- Gerencia de Memória ----------------------------
 
